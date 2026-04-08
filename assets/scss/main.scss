@@ -1,33 +1,234 @@
-// assets/scss/main.scss
-// RÉFÉRENCE ABSOLUE - AUCUN FRAGMENT
-
-@use 'variables';
-@use 'base';
-
-// Import des organes (Blocks autonomes)
+// 1. LES IMPORTS (Toujours en premier)
+@use 'variables' as *;
 @use '../../blocks/w-notes/w-notes';
 @use '../../blocks/w-codepen/w-codepen';
+@use '../../blocks/w-lorem/w-lorem';
 
-// LA DICTATURE DU SQUELETTE : COMMANDE UNIQUE
-main.modulor-grid {
-    display: block; 
-    width: 100%;
-    margin: 0;
-    padding: 20px; // Espacement global du dashboard
+// 2. RESET & BASE
+* { 
+    box-sizing: border-box; 
 }
 
-// C'est ici que la magie de la cohérence opère
+body.modulor-bg {
+    background: $bg-gradient;
+    min-height: 100vh;
+    margin: 0;
+    font-family: $font-mono;
+    color: $white;
+}
+
+// 3. LE SQUELETTE
+main.modulor-grid {
+    display: flex;
+    flex-direction: column;
+    gap: $grid-gap;
+    padding: 20px;
+    max-width: $container-max-width;
+    margin: 0 auto;
+}
+
+// 4. LA PEAU (Le Skin)
 .modulor-card {
+    background: $card-bg !important; 
+    border: 1px solid $card-border !important;
+    border-radius: $border-radius !important;
+    padding: 25px;
+    backdrop-filter: $card-blur;
+    transition: $transition;
     width: 100%;
     margin-bottom: 20px;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.03); 
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
     
     &:hover {
-        border-color: #4ecca3;
-        background: rgba(255, 255, 255, 0.05);
+        border-color: $primary-color !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+        .card-title, span, h2, h3 {
+            font-family: $font-mono; 
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase; 
+            color: $primary-color !important;
+            margin: 0;
+        }
+    }
+}
+
+// 5. HABILLAGE DES ÉLÉMENTS INTERNES & SUPPRESSION DES FLÈCHES
+textarea, input, .lorem-preview, .w-codepen__area {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 12px;
+    font-family: $font-mono;
+    outline: none;
+
+    &:focus {
+        border-color: $primary-color !important;
+    }
+}
+
+/* Suppression des flèches d'incrémentation */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+// 6. BOUTONS GÉNÉRIQUES (Le Skin Interactif)
+.btn-action, .btn-mini, .btn-copy, .qty-btn, .w-codepen__btn-flip, #gen-lorem, #copy-lorem {
+    cursor: pointer !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: $primary-color !important;
+    border-radius: 6px !important;
+    font-family: $font-mono;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px !important;
+    padding: 0 20px !important;
+    outline: none;
+    
+    &:hover {
+        background: $primary-color !important;
+        color: #000 !important;
+        border-color: $primary-color !important;
+        box-shadow: 0 0 15px rgba($primary-color, 0.2);
+    }
+
+    &:active {
+        filter: brightness(0.8);
+    }
+}
+
+.qty-btn {
+    padding: 0 !important;
+    min-width: 35px;
+}
+
+// 7. HEADER & LOGO INTERACTIF (Version Minimaliste)
+.modulor-header {
+    padding: 60px 20px 20px;
+    text-align: center;
+}
+
+.modulor-logo {
+    font-family: $font-mono;
+    font-size: 1.2rem;
+    letter-spacing: 12px;
+    color: rgba(255, 255, 255, 0.2); // Le reste du texte est très discret
+    margin: 0;
+    text-transform: uppercase;
+    cursor: default;
+    user-select: none;
+
+    .logo-trigger {
+        display: inline-block;
+        color: $primary-color; // Seul le O est coloré par défaut
+        cursor: pointer;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+        position: relative;
+        padding: 0 2px;
+        
+        // Au survol, on renforce juste la lueur
+        &:hover {
+            color: $white;
+            text-shadow: 0 0 15px $primary-color;
+        }
+        
+        // Quand le panneau est ouvert
+        &.active {
+            color: $white;
+            text-shadow: 0 0 10px $white;
+            &::after {
+                content: '_'; // Petit indicateur de statut type curseur
+                position: absolute;
+                bottom: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.8rem;
+            }
+        }
+    }
+}
+
+// 8. SKIN ENGINE PANEL
+.skin-engine-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.02);
+    margin-top: 30px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+
+    &.open {
+        max-height: 200px;
+        padding: 30px 0;
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .panel-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+
+        .panel-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba($primary-color, 0.5);
+            font-weight: bold;
+        }
+    }
+}
+
+.skin-options {
+    display: flex;
+    gap: 15px;
+    
+    .skin-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.4);
+        padding: 8px 16px;
+        font-family: $font-mono;
+        font-size: 0.65rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+
+        &:hover {
+            border-color: rgba($primary-color, 0.5);
+            color: $white;
+        }
+
+        &.active {
+            background: rgba($primary-color, 0.1);
+            border-color: $primary-color;
+            color: $primary-color;
+            box-shadow: inset 0 0 10px rgba($primary-color, 0.1);
+        }
     }
 }

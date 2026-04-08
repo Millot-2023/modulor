@@ -25,3 +25,8 @@ C'est ici que l'IA intervient sous surveillance étroite du Patron.
 
 ---
 *Document établi pour servir de mémoire technique inviolable.*
+
+
+//http://localhost/modulor/blocks/w-notes/w-notes.php
+//http://localhost/modulor/blocks/w-codepen/w-codepen.php
+//http://localhost/modulor/blocks/w-lorem/w-lorem.php

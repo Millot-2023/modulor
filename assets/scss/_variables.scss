@@ -1,0 +1,29 @@
+// --- COULEURS THÈME ---
+$primary-color: #4ecca3; 
+$accent-red:    #ff4757; 
+$white:         #ffffff;
+$black:         #000000;
+
+// --- EFFETS GLASSMORPHISM ---
+$bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+$card-bg:     rgba(255, 255, 255, 0.03); 
+$card-border: rgba(255, 255, 255, 0.08);
+$card-blur:   blur(12px); 
+
+// --- STRUCTURE & RESPONSIVE ---
+$border-radius: 12px; 
+$container-max-width: 1200px;
+$grid-gap: 25px;
+
+// --- ESPACEMENT ---
+$space-section: 60px;
+$space-title-gap: 25px;
+$section-padding-x: 5px;
+
+// --- ANIMATIONS ---
+$transition: 0.2s ease;
+$transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+// --- DIVERS ---
+$header-height-closed: 50px;
+$font-mono: 'Fira Code', 'Monaco', monospace;

@@ -1,47 +1,55 @@
-// blocks/w-codepen/w-codepen.js
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.querySelector('.w-codepen');
+    if (!root) return;
 
-(function() {
-    const initCodepen = () => {
-        const instances = document.querySelectorAll('.w-codepen');
+    const tabs = root.querySelectorAll('.w-codepen__tab');
+    const areas = root.querySelectorAll('.w-codepen__area[data-lang]');
 
-        instances.forEach(container => {
-            const htmlInput = container.querySelector('.cp-html');
-            const cssInput = container.querySelector('.cp-css');
-            const jsInput = container.querySelector('.cp-js');
-            const renderFrame = container.querySelector('.cp-live-render');
-            const flipBtns = container.querySelectorAll('.btn-flip');
-
-            const updatePreview = () => {
-                if (!renderFrame) return;
-                const content = `
-                    <html>
-                        <style>${cssInput.value}</style>
-                        <body>${htmlInput.value}
-                        <script>${jsInput.value}<\/script>
-                        </body>
-                    </html>`;
-                const frameDoc = renderFrame.contentDocument || renderFrame.contentWindow.document;
-                frameDoc.open();
-                frameDoc.write(content);
-                frameDoc.close();
-            };
-
-            // Événements
-            flipBtns.forEach(btn => btn.addEventListener('click', () => {
-                container.classList.toggle('is-flipped');
-            }));
-
-            [htmlInput, cssInput, jsInput].forEach(el => {
-                if(el) el.addEventListener('input', updatePreview);
-            });
-
-            updatePreview(); // Initial render
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const lang = tab.dataset.lang;
+            tabs.forEach(t => t.classList.remove('active'));
+            areas.forEach(a => a.classList.remove('active'));
+            tab.classList.add('active');
+            const targetArea = root.querySelector(`.w-codepen__area[data-lang="${lang}"]`);
+            if (targetArea) targetArea.classList.add('active');
         });
+    });
+
+    const html = root.querySelector('.cp-html');
+    const css = root.querySelector('.cp-css');
+    const js = root.querySelector('.cp-js');
+    const iframe = root.querySelector('.cp-live-render');
+
+    const render = () => {
+        if (!iframe) return;
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const content = `
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <style>body{margin:0; font-family:sans-serif;}${css.value}</style>
+                </head>
+                <body>
+                    ${html.value}
+                    <script>${js.value}<\/script>
+                </body>
+            </html>`;
+        doc.open();
+        doc.write(content);
+        doc.close();
     };
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCodepen);
-    } else {
-        initCodepen();
-    }
-})();
+    [html, css, js].forEach(el => {
+        if (el) el.addEventListener('input', render);
+    });
+
+    const flipBtns = root.querySelectorAll('.w-codepen__btn-flip');
+    flipBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            root.classList.toggle('is-flipped');
+        });
+    });
+
+    render();
+});

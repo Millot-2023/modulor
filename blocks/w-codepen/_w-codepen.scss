@@ -1,85 +1,85 @@
-// blocks/w-codepen/_w-codepen.scss
-
-$cp-accent: #4ecca3 !default;
-$cp-bg: rgba(255, 255, 255, 0.05) !default;
-
+// Boîtier technique NU
 .w-codepen {
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: $cp-bg;
-    padding: 20px;
-    border-radius: 8px;
+    position: relative;
 
     &__flipper {
         position: relative;
         width: 100%;
-        display: flex;
-        flex-direction: column;
     }
 
-    &__front, &__back {
-        width: 100%;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-
-    &__back {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-    }
+    &__front { display: block; }
+    &__back { display: none; }
 
     &.is-flipped {
-        .w-codepen__front { opacity: 0; visibility: hidden; pointer-events: none; }
-        .w-codepen__back { opacity: 1; visibility: visible; pointer-events: auto; }
+        .w-codepen__front { display: none; }
+        .w-codepen__back { display: block; }
     }
 
-    &__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    &__split {
+    &__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-        margin-top: 10px;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    &__label {
+        font-size: 0.65rem;
+        color: rgba(255,255,255,0.4);
+        margin-bottom: 8px;
     }
 
     &__area {
         width: 100%;
-        height: 150px;
-        background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-        color: $cp-accent;
-        font-family: 'Fira Code', monospace;
+        height: 180px;
+        display: none; 
         font-size: 0.75rem;
-        padding: 8px;
-        resize: vertical;
-        outline: none;
+
+        &.active, &.cp-html { display: block; }
+    }
+
+    &__nav {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 8px;
+    }
+
+    &__tab {
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.3);
+        font-size: 0.7rem;
+        &.active { color: #4ecca3; }
     }
 
     &__iframe {
         width: 100%;
-        min-height: 300px;
+        min-height: 200px;
         background: white;
         border-radius: 4px;
-        margin-top: 10px;
+        margin-top: 15px;
         border: none;
     }
 
+    &__actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        
+        .btn-action {
+            flex: 1;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            font-size: 0.65rem;
+            &:hover { background: #4ecca3; color: #000; }
+        }
+    }
+
     &__btn-flip {
-        background: none;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: $cp-accent;
-        cursor: pointer;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #4ecca3;
         padding: 4px 8px;
         border-radius: 4px;
         font-size: 0.7rem;
