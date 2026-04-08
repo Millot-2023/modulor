@@ -1,0 +1,50 @@
+// blocks/w-notes/_w-notes.scss
+
+// Variables locales par défaut (évite l'erreur si variables.scss est absent)
+$notes-accent: #4ecca3 !default;
+$notes-bg: rgba(255, 255, 255, 0.05) !default;
+
+.w-notes {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: $notes-bg;
+    padding: 20px;
+    border-radius: 8px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        
+        i { color: $notes-accent; font-size: 0.9rem; }
+        h3 { 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            color: #ffffff;
+            margin: 0;
+        }
+    }
+
+    &__content {
+        flex: 1;
+        margin-top: 15px;
+    }
+
+    &__textarea {
+        width: 100%;
+        height: 150px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: inherit;
+        font-size: 0.85rem;
+        resize: none;
+        outline: none;
+
+        &::placeholder { color: rgba(255, 255, 255, 0.1); }
+    }
+}

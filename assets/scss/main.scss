@@ -1,0 +1,33 @@
+// assets/scss/main.scss
+// RÉFÉRENCE ABSOLUE - AUCUN FRAGMENT
+
+@use 'variables';
+@use 'base';
+
+// Import des organes (Blocks autonomes)
+@use '../../blocks/w-notes/w-notes';
+@use '../../blocks/w-codepen/w-codepen';
+
+// LA DICTATURE DU SQUELETTE : COMMANDE UNIQUE
+main.modulor-grid {
+    display: block; 
+    width: 100%;
+    margin: 0;
+    padding: 20px; // Espacement global du dashboard
+}
+
+// C'est ici que la magie de la cohérence opère
+.modulor-card {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    
+    &:hover {
+        border-color: #4ecca3;
+        background: rgba(255, 255, 255, 0.05);
+    }
+}

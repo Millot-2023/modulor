@@ -1,0 +1,32 @@
+// assets/scss/_base.scss
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0d0d12;
+    color: #ffffff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+// Scrollbars (Optionnel, garde ton code actuel)
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0d0d12; }
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    &:hover { background: rgba(78, 204, 163, 0.3); }
+}
+
+// LA CORRECTION EST ICI
+main {
+    width: 100%;
+    max-width: 100vw; // Utilise 100% de la largeur de vue (Viewport Width)
+    margin: 0;       // On supprime le centrage pour coller aux bords
+}
