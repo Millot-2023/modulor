@@ -1,66 +1,62 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const words = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "nulla", "facilisi", "integer", "eu", "lacus", "at", "velit", "viverra", "aliquam", "mauris", "pharetra", "augue", "sed", "urna", "pretium", "porttitor"];
+const LOREM_WORDS = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "nulla", "facilisi", "integer", "eu", "lacus", "at", "velit", "viverra", "aliquam", "mauris", "pharetra", "augue", "sed", "urna", "pretium", "porttitor"];
+
+// 1. GÉNÉRATION DU HTML
+function createLoremBlock() {
+    return `
+        <div class="w-lorem">
+            <div class="modulor-card__header">
+                <h2 class="card-title">Lorem_Gen</h2>
+                <div class="lorem-controls">
+                    <input type="number" class="lorem-amount" value="3" min="1" max="50">
+                    <select class="lorem-type">
+                        <option value="words">Words</option>
+                        <option value="sentences" selected>Sentences</option>
+                        <option value="paragraphs">Paragraphs</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="lorem-preview">Le texte apparaîtra ici...</div>
+            
+            <div class="modulor-card__footer" style="margin-top:15px; display:flex; gap:10px;">
+                <button class="btn-mini gen-lorem">Générer</button>
+                <button class="btn-mini copy-lorem"><i class="fas fa-copy"></i></button>
+                <span class="lorem-counter" style="font-size:0.6rem; opacity:0.5; margin-left:auto">0 chars</span>
+            </div>
+        </div>
+    `;
+}
+
+// 2. LOGIQUE INTERNE
+function initLorem() {
+    const instances = document.querySelectorAll('.w-lorem:not([data-initialized])');
     
-    const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    instances.forEach(container => {
+        const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        
+        const generateSentence = () => {
+            let len = Math.floor(Math.random() * 8) + 6;
+            let sentence = [];
+            for (let i = 0; i < len; i++) {
+                sentence.push(getRandom(LOREM_WORDS));
+                if (i > 2 && i < len - 2 && Math.random() > 0.8) sentence[i] += ",";
+            }
+            let str = sentence.join(" ");
+            return str.charAt(0).toUpperCase() + str.slice(1) + ".";
+        };
 
-    const generateSentence = () => {
-        let len = Math.floor(Math.random() * 8) + 6;
-        let sentence = [];
-        for (let i = 0; i < len; i++) {
-            sentence.push(getRandom(words));
-            if (i > 2 && i < len - 2 && Math.random() > 0.8) sentence[i] += ",";
-        }
-        let str = sentence.join(" ");
-        return str.charAt(0).toUpperCase() + str.slice(1) + ".";
-    };
+        const output = container.querySelector('.lorem-preview');
+        const counter = container.querySelector('.lorem-counter');
+        const genBtn = container.querySelector('.gen-lorem');
+        const copyBtn = container.querySelector('.copy-lorem');
+        const amountInput = container.querySelector('.lorem-amount');
+        const typeInput = container.querySelector('.lorem-type');
 
-    const updateUI = (text) => {
-        const output = document.getElementById('lorem-output');
-        const counter = document.getElementById('lorem-counter');
-        if(output) output.innerText = text;
-        if(counter) counter.innerText = `${text.length} chars`;
-    };
-
-    const customSelect = document.querySelector('.custom-select');
-    const trigger = document.querySelector('.select-trigger');
-    const options = document.querySelectorAll('.option');
-    const typeInput = document.getElementById('lorem-type');
-
-    if (trigger && customSelect) {
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            customSelect.classList.toggle('active');
-        });
-
-        options.forEach(opt => {
-            opt.addEventListener('click', () => {
-                if (typeInput) typeInput.value = opt.dataset.value;
-                const span = trigger.querySelector('span');
-                if (span) span.textContent = opt.textContent;
-                options.forEach(o => o.classList.remove('selected'));
-                opt.classList.add('selected');
-                customSelect.classList.remove('active');
-            });
-        });
-    }
-
-    document.addEventListener('click', () => customSelect?.classList.remove('active'));
-
-    const btnUp = document.querySelector('.qty-btn.up');
-    const btnDown = document.querySelector('.qty-btn.down');
-    const amountInput = document.getElementById('lorem-amount');
-
-    if (btnUp && btnDown && amountInput) {
-        btnUp.onclick = () => amountInput.stepUp();
-        btnDown.onclick = () => amountInput.stepDown();
-    }
-
-    const genBtn = document.getElementById('gen-lorem');
-    if (genBtn) {
         genBtn.addEventListener('click', () => {
-            const type = typeInput?.value || 'words';
-            const amount = parseInt(amountInput?.value) || 1;
+            const type = typeInput.value;
+            const amount = parseInt(amountInput.value) || 1;
             let results = [];
+
             for (let i = 0; i < amount; i++) {
                 if (type === 'paragraphs') {
                     let p = [];
@@ -69,22 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (type === 'sentences') {
                     results.push(generateSentence());
                 } else {
-                    results.push(getRandom(words));
+                    results.push(getRandom(LOREM_WORDS));
                 }
             }
-            updateUI(results.join(type === 'paragraphs' ? "" : " ").trim());
-        });
-    }
 
-    const copyBtn = document.getElementById('copy-lorem');
-    if (copyBtn) {
+            const finalBtn = results.join(type === 'paragraphs' ? "" : " ").trim();
+            output.innerText = finalBtn;
+            counter.innerText = `${finalBtn.length} chars`;
+        });
+
         copyBtn.addEventListener('click', () => {
-            const output = document.getElementById('lorem-output');
-            if (!output || output.innerText.includes("apparaîtra ici")) return;
+            if (output.innerText.includes("apparaîtra ici")) return;
             navigator.clipboard.writeText(output.innerText).then(() => {
-                output.classList.add('flash-success');
-                setTimeout(() => output.classList.remove('flash-success'), 800);
+                copyBtn.classList.add('flash-success');
+                setTimeout(() => copyBtn.classList.remove('flash-success'), 800);
             });
         });
-    }
-});
+
+        container.setAttribute('data-initialized', 'true');
+    });
+}
+
+// 3. AUTO-INIT
+document.addEventListener('DOMContentLoaded', initLorem);
