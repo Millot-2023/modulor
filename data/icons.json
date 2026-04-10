@@ -1,0 +1,14 @@
+{
+  "atom": { "search": { "terms": ["science", "nuclear"] } },
+  "microchip": { "search": { "terms": ["tech", "cpu"] } },
+  "terminal": { "search": { "terms": ["code", "command"] } },
+  "basketball": { "search": { "terms": ["sport", "ball"] } },
+  "football": { "search": { "terms": ["sport", "ball"] } },
+  "bicycle": { "search": { "terms": ["sport", "bike"] } },
+  "dumbbell": { "search": { "terms": ["sport", "gym"] } },
+  "person-running": { "search": { "terms": ["sport", "run"] } },
+  "swimming-pool": { "search": { "terms": ["sport", "water"] } },
+  "code": { "search": { "terms": ["develop", "html"] } },
+  "database": { "search": { "terms": ["data", "sql"] } },
+  "server": { "search": { "terms": ["hosting", "cloud"] } }
+}

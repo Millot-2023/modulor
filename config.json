@@ -1,0 +1,16 @@
+{
+    "blocks": [
+        {
+            "type": "notes"
+        },
+        {
+            "type": "codepen"
+        },
+        {
+            "type": "lorem"
+        },
+        {
+            "type": "fontawesome"
+        }
+    ]
+}
