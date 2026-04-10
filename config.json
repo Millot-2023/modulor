@@ -1,16 +1,43 @@
 {
     "blocks": [
         {
-            "type": "notes"
+            "id": "1775827479607",
+            "cols": 1,
+            "modules": [
+                {
+                    "type": "codepen"
+                },
+                {
+                    "type": "empty"
+                }
+            ]
         },
         {
-            "type": "codepen"
+            "id": "1775827541491",
+            "cols": 1,
+            "modules": [
+                {
+                    "type": "fontawesome"
+                }
+            ]
         },
         {
-            "type": "lorem"
+            "id": "1775827576023",
+            "cols": 1,
+            "modules": [
+                {
+                    "type": "notes"
+                }
+            ]
         },
         {
-            "type": "fontawesome"
+            "id": "1775827977481",
+            "cols": 1,
+            "modules": [
+                {
+                    "type": "empty"
+                }
+            ]
         }
     ]
 }

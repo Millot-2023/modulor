@@ -117,17 +117,35 @@ $themeClass = "skin-" . ($config['theme'] ?? 'cyber');
             <div class="journal-section">
                 <h4>ACTIONS_MENÉES</h4>
                 <div id="done-list">
+                    <div class="entry"><span class="timestamp">[OK]</span> Restauration HTML PHP</div>
+                    <div class="entry"><span class="timestamp">[OK]</span> Init JS post-load</div>
+                    <div class="entry"><span class="timestamp">[OK]</span> CSS Grid Override</div>
+                    <div class="entry"><span class="timestamp">[OK]</span> Intégration Bloc FontAwesome (Viewer & Picker)</div>
+                    <div class="entry"><span class="timestamp">[OK]</span> Synchronisation LocalStorage / Config.json</div>
                     <div class="entry"><span class="timestamp">[OK]</span> Uniformisation Injection JS</div>
-                    <div class="entry"><span class="timestamp">[OK]</span> Persistance du thème <?php echo strtoupper($config['theme']); ?></div>
-                    <div class="entry"><span class="timestamp">[OK]</span> Correction Grille FontAwesome post-refresh</div>
+                    <div class="entry"><span class="timestamp">[OK]</span> Correction Doublons Boutons & Warnings PHP</div>
                 </div>
             </div>
 
             <div class="journal-section">
                 <h4>ROADMAP_LOGICIELLE</h4>
                 <div id="todo-list">
-                    <div class="entry"><span class="timestamp">[TODO]</span> Inversion de dépendance Flat-file finale</div>
+                    <div class="entry"><span class="timestamp">[WAIT]</span> Inversion de dépendance Flat-file finale</div>
                     <div class="entry"><span class="timestamp">[TODO]</span> Gestionnaire de médias centralisé</div>
+                    <div class="entry"><span class="timestamp">[TODO]</span> Export de configuration par lot</div>
+                </div>
+            </div>
+
+            <div class="journal-section" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 10px;">
+                <h4>RETRO_INGÉNIERIE_CRITIQUE</h4>
+                <div class="entry" style="color: #ffca28;">
+                    <span class="timestamp">[!]</span> <strong>Problème de Persistance :</strong> Le bloc FontAwesome disparaissait au refresh car le système de sauvegarde (`storage.js`) ne scannait que l'attribut `data-type`. Les blocs injectés par PHP n'avaient pas cet attribut, créant un "vide" dans le JSON qui écrasait le rendu serveur.
+                </div>
+                <div class="entry" style="color: #ffca28;">
+                    <span class="timestamp">[!]</span> <strong>Conflit de Flux :</strong> Le `loadWorkstation()` réinitialisait le DOM avant que le moteur `FontAwesomeViewer` ne puisse s'attacher aux éléments.
+                </div>
+                <div class="entry" style="color: #4caf50;">
+                    <span class="timestamp">[SOL]</span> <strong>Protocole Standard :</strong> Tout futur module doit : 1. Être déclaré dans le `injectBlock` du `ui-engine`, 2. Avoir une classe de détection explicite pour le scan de sauvegarde, 3. Appeler son init() après injection dynamique.
                 </div>
             </div>
         </div>
