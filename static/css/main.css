@@ -95,19 +95,21 @@ body.skin-terminal {
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
+.w-codepen__col {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
 .w-codepen__label {
   font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.4);
   margin-bottom: 8px;
-}
-.w-codepen__area {
-  width: 100%;
-  height: 180px;
-  display: none;
-  font-size: 0.75rem;
-}
-.w-codepen__area.active, .w-codepen__area.cp-html {
-  display: block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .w-codepen__nav {
   display: -webkit-box;
@@ -119,18 +121,48 @@ body.skin-terminal {
 .w-codepen__tab {
   background: transparent;
   border: none;
+  padding: 0;
+  cursor: pointer;
   color: rgba(255, 255, 255, 0.3);
   font-size: 0.7rem;
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
 }
 .w-codepen__tab.active {
   color: #4ecca3;
+  font-weight: bold;
+}
+.w-codepen__tab:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.6);
+}
+.w-codepen__area {
+  width: 100%;
+  height: 180px;
+  display: none;
+  font-size: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  padding: 10px;
+  font-family: "Courier New", Courier, monospace;
+  resize: none;
+}
+.w-codepen__area.active, .w-codepen__area.cp-html {
+  display: block;
+}
+.w-codepen__area:focus {
+  outline: none;
+  border-color: rgba(78, 204, 163, 0.3);
+}
+.w-codepen__render-container {
+  width: 100%;
+  margin-top: 15px;
 }
 .w-codepen__iframe {
   width: 100%;
   min-height: 200px;
   background: white;
   border-radius: 4px;
-  margin-top: 15px;
   border: none;
 }
 .w-codepen__actions {
@@ -149,10 +181,14 @@ body.skin-terminal {
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ccc;
   font-size: 0.65rem;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 .w-codepen__actions .btn-action:hover {
   background: #4ecca3;
   color: #000;
+  border-color: #4ecca3;
 }
 .w-codepen__btn-flip {
   background: rgba(255, 255, 255, 0.05);
@@ -161,6 +197,16 @@ body.skin-terminal {
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.7rem;
+  cursor: pointer;
+}
+.w-codepen__btn-flip:hover {
+  background: rgba(78, 204, 163, 0.1);
+}
+.w-codepen__archives-list {
+  min-height: 150px;
+  margin-top: 15px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
 }
 
 .w-lorem .lorem-controls {

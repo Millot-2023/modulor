@@ -44,6 +44,7 @@ function initSkinEngine() {
             const classes = Array.from(body.classList).filter(c => !c.startsWith('skin-'));
             body.className = classes.join(' '); 
             body.classList.add(`skin-${theme}`);
+            if (typeof saveWorkstation === 'function') saveWorkstation();
         });
     });
 }
@@ -63,11 +64,21 @@ function initSectionEngine() {
     if(addBtn) {
         addBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const rowId = Date.now().toString();
-            renderRow(rowId, 1, [{type: selectedBlockType}]);
-            if (typeof saveWorkstation === 'function') saveWorkstation();
+            createNewRowWithModule('empty');
         });
     }
+}
+
+function createNewRowWithModule(type = 'empty') {
+    const rowId = Date.now().toString();
+    renderRow(rowId, 1, [{type: type}]);
+    
+    if (type !== 'empty' && typeof saveWorkstation === 'function') {
+        saveWorkstation();
+    }
+    
+    const rows = document.querySelectorAll('.modulor-row');
+    if(rows.length > 0) rows[rows.length-1].scrollIntoView({ behavior: 'smooth' });
 }
 
 function renderRow(id, cols, modules = null) {
@@ -95,6 +106,10 @@ function renderRow(id, cols, modules = null) {
         modules.forEach(m => {
             const card = document.createElement('section');
             card.className = 'modulor-card';
+            // On transfert les données pour injectBlock
+            if(m.content) card.setAttribute('data-content', m.content);
+            if(m.id) card.setAttribute('data-rel-id', m.id);
+            
             container.appendChild(card);
             if (m.type === 'empty' || !m.type) {
                 card.classList.add('empty-slot');
@@ -103,13 +118,6 @@ function renderRow(id, cols, modules = null) {
                 injectBlock(card, m.type, true);
             }
         });
-    } else {
-        for(let i=0; i < cols; i++) {
-            const card = document.createElement('section');
-            card.className = 'modulor-card empty-slot';
-            card.innerHTML = `<button class="btn-mini" onclick="openBlockPicker(this)"><i class="fas fa-plus"></i></button>`;
-            container.appendChild(card);
-        }
     }
 }
 
@@ -160,16 +168,24 @@ function injectBlock(btnOrSlot, type, isManual = false) {
                  : btnOrSlot.closest('.modulor-card');
     if (!slot) return;
     
+    const isLastRow = slot.closest('.modulor-row') === mainGrid.lastElementChild;
+
+    // RÉCUPÉRATION DES DONNÉES PERSISTÉES
+    const savedContent = slot.getAttribute('data-content') || "";
+    const savedId = slot.getAttribute('data-rel-id') || "";
+
     slot.innerHTML = ''; 
     slot.classList.remove('empty-slot');
     slot.setAttribute('data-type', type);
 
-    // Bouton de suppression systématique
     const btnDel = document.createElement('button');
     btnDel.className = 'btn-delete-module';
     btnDel.setAttribute('title', 'Supprimer');
     btnDel.innerHTML = '<i class="fas fa-times"></i>';
-    btnDel.onclick = function() { resetSlot(this); };
+    btnDel.onclick = function(e) { 
+        e.stopPropagation();
+        resetSlot(this); 
+    };
     slot.appendChild(btnDel);
 
     const wrapper = document.createElement('div');
@@ -180,29 +196,39 @@ function injectBlock(btnOrSlot, type, isManual = false) {
     else if (type === 'codepen') contentHTML = typeof createCodepenBlock === 'function' ? createCodepenBlock() : '';
     else if (type === 'lorem') contentHTML = typeof createLoremBlock === 'function' ? createLoremBlock() : '';
     else if (type === 'fontawesome') {
-        contentHTML = `
-            <div class="w-fontawesome">
-                <div class="card-header"><span class="card-title">ICON_EXPLORER_</span></div>
-                <div class="w-fontawesome__search"><input type="text" placeholder="FILTER_ICONS_" class="fa-search-input"></div>
-                <div class="fa-grid-container"></div>
-            </div>`;
+        contentHTML = `<div class="w-fontawesome"><div class="card-header"><span class="card-title">ICON_EXPLORER_</span></div><div class="w-fontawesome__search"><input type="text" placeholder="FILTER_ICONS_" class="fa-search-input"></div><div class="fa-grid-container"></div></div>`;
     }
 
     wrapper.innerHTML = contentHTML;
     slot.appendChild(wrapper);
     
-    if (type === 'notes' && typeof initNotes === 'function') initNotes();
-    if (type === 'codepen' && typeof initCodepen === 'function') initCodepen();
+    // RÉINJECTION DES DONNÉES DANS LES CHAMPS
+    if (type === 'notes') {
+        if (typeof initNotes === 'function') initNotes();
+        const textarea = slot.querySelector('textarea');
+        if (textarea && savedContent) textarea.value = savedContent;
+    }
+    if (type === 'codepen') {
+        if (typeof initCodepen === 'function') initCodepen();
+        const cpInput = slot.querySelector('.cp-id-input');
+        if (cpInput && savedId) cpInput.value = savedId;
+    }
     if (type === 'lorem' && typeof initLorem === 'function') initLorem();
     if (type === 'fontawesome' && typeof FontAwesomeViewer !== 'undefined') FontAwesomeViewer.init();
     
-    if(!isManual && typeof saveWorkstation === 'function') saveWorkstation();
+    if (typeof saveWorkstation === 'function') saveWorkstation();
+
+    if (isLastRow && !isManual) {
+        createNewRowWithModule('empty');
+    }
 }
 
 function resetSlot(btn) {
     const slot = btn.closest('.modulor-card');
     slot.classList.add('empty-slot');
     slot.removeAttribute('data-type');
+    slot.removeAttribute('data-content');
+    slot.removeAttribute('data-rel-id');
     slot.innerHTML = `<button class="btn-mini" onclick="openBlockPicker(this)"><i class="fas fa-plus"></i></button>`;
     if (typeof saveWorkstation === 'function') saveWorkstation();
 }
@@ -211,4 +237,11 @@ window.addEventListener('DOMContentLoaded', () => {
     initInterfaceUI();
     initSkinEngine();
     initSectionEngine();
+    
+    const lastRow = mainGrid ? mainGrid.lastElementChild : null;
+    const isLastEmpty = lastRow && lastRow.querySelector('.empty-slot');
+
+    if (!isLastEmpty) {
+        createNewRowWithModule('empty');
+    }
 });
