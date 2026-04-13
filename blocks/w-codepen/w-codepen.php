@@ -7,9 +7,11 @@ if ($is_solo) {
 }
 ?>
 
-<div class="w-codepen modulor-card">
-    <div class="w-codepen__flipper">
-        
+<section class="modulor-card" data-type="codepen">
+    <button class="btn-delete-module"><i class="fas fa-times"></i></button>
+    <div class="module-wrapper">
+        <div class="w-codepen">
+            <div class="w-codepen__flipper">
         <div class="w-codepen__front">
             <div class="modulor-card__header">
                 <span class="card-title">Design Lab_</span>
@@ -53,8 +55,10 @@ if ($is_solo) {
             <div class="w-codepen__archives-list"></div>
         </div>
 
+            </div>
+        </div>
     </div>
-</div>
+</section>
 
 <?php
 if ($is_solo) {

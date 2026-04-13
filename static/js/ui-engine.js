@@ -1,4 +1,4 @@
-/* static/js/ui-engine.js */
+/* static/js/ui-engine.js - CORRIGÉ */
 
 const body = document.body;
 const mainGrid = document.getElementById('main-grid');
@@ -106,15 +106,17 @@ function renderRow(id, cols, modules = null) {
         modules.forEach(m => {
             const card = document.createElement('section');
             card.className = 'modulor-card';
-            // On transfert les données pour injectBlock
+            
             if(m.content) card.setAttribute('data-content', m.content);
             if(m.id) card.setAttribute('data-rel-id', m.id);
             
             container.appendChild(card);
+            
             if (m.type === 'empty' || !m.type) {
                 card.classList.add('empty-slot');
                 card.innerHTML = `<button class="btn-mini" onclick="openBlockPicker(this)"><i class="fas fa-plus"></i></button>`;
             } else {
+                // CORRECTION : on passe directement l'élément card pour éviter la duplication
                 injectBlock(card, m.type, true);
             }
         });
@@ -163,14 +165,19 @@ function cancelPicker(btn) {
 }
 
 function injectBlock(btnOrSlot, type, isManual = false) {
-    const slot = (btnOrSlot instanceof HTMLElement && btnOrSlot.classList.contains('modulor-card')) 
-                 ? btnOrSlot 
-                 : btnOrSlot.closest('.modulor-card');
+    // CORRECTION LOGIQUE DE CIBLAGE
+    let slot;
+    if (btnOrSlot instanceof HTMLElement) {
+        if (btnOrSlot.classList.contains('modulor-card')) {
+            slot = btnOrSlot;
+        } else {
+            slot = btnOrSlot.closest('.modulor-card');
+        }
+    }
+    
     if (!slot) return;
     
     const isLastRow = slot.closest('.modulor-row') === mainGrid.lastElementChild;
-
-    // RÉCUPÉRATION DES DONNÉES PERSISTÉES
     const savedContent = slot.getAttribute('data-content') || "";
     const savedId = slot.getAttribute('data-rel-id') || "";
 
@@ -202,7 +209,6 @@ function injectBlock(btnOrSlot, type, isManual = false) {
     wrapper.innerHTML = contentHTML;
     slot.appendChild(wrapper);
     
-    // RÉINJECTION DES DONNÉES DANS LES CHAMPS
     if (type === 'notes') {
         if (typeof initNotes === 'function') initNotes();
         const textarea = slot.querySelector('textarea');
@@ -225,11 +231,17 @@ function injectBlock(btnOrSlot, type, isManual = false) {
 
 function resetSlot(btn) {
     const slot = btn.closest('.modulor-card');
-    slot.classList.add('empty-slot');
-    slot.removeAttribute('data-type');
-    slot.removeAttribute('data-content');
-    slot.removeAttribute('data-rel-id');
-    slot.innerHTML = `<button class="btn-mini" onclick="openBlockPicker(this)"><i class="fas fa-plus"></i></button>`;
+    if(!slot) return;
+    const row = slot.closest('.modulor-row');
+    const container = row.querySelector('.row-content');
+    
+    if (container.children.length <= 1) {
+        row.remove();
+    } else {
+        slot.remove();
+        container.className = `row-content grid-cols-${container.children.length}`;
+    }
+    
     if (typeof saveWorkstation === 'function') saveWorkstation();
 }
 
@@ -239,7 +251,22 @@ window.addEventListener('DOMContentLoaded', () => {
     initSectionEngine();
     
     const lastRow = mainGrid ? mainGrid.lastElementChild : null;
-    const isLastEmpty = lastRow && lastRow.querySelector('.empty-slot');
+    
+    // Nettoyage des slots vides intermédiaires (séparateurs superflus)
+    if (mainGrid) {
+        mainGrid.querySelectorAll('.empty-slot').forEach(slot => {
+            const row = slot.closest('.modulor-row');
+            if (row !== lastRow) {
+                const container = row.querySelector('.row-content');
+                slot.remove();
+                if (container && container.children.length === 0) row.remove();
+                else if (container) container.className = `row-content grid-cols-${container.children.length}`;
+            }
+        });
+    }
+
+    const updatedLastRow = mainGrid ? mainGrid.lastElementChild : null;
+    const isLastEmpty = updatedLastRow && updatedLastRow.querySelector('.empty-slot');
 
     if (!isLastEmpty) {
         createNewRowWithModule('empty');

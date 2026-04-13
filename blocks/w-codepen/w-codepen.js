@@ -1,7 +1,7 @@
 // 1. GÉNÉRATION DU HTML (Inchangé pour garder la structure 2 fenêtres)
 function createCodepenBlock() {
     return `
-        <div class="w-codepen modulor-card">
+        <div class="w-codepen">
             <div class="w-codepen__flipper">
                 <div class="w-codepen__front">
                     <div class="modulor-card__header">
